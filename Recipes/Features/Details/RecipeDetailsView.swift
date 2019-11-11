@@ -14,7 +14,7 @@ struct RecipeDetailsView: View {
     private var subheadline: some View {
         Text("\(Int(recipe.calories)) kcal ")
             +
-            Text("\(Int(recipe.totalWeight)) gr")
+            Text("\(Int(recipe.totalWeight)) g")
     }
 
     var body: some View {
