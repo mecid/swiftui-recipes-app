@@ -15,8 +15,12 @@ struct HomeContainerView: View {
         !store.state.favorited.isEmpty
     }
 
+    private var health: Binding<Health> {
+        store.send(binding: \.health) { .setHealth(health: $0) }
+    }
+
     var body: some View {
-        HomeView()
+        HomeView(health: health)
             .onAppear { self.store.send(.resetState) }
             .navigationBarTitle("Recipes")
             .navigationBarItems(

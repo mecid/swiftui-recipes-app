@@ -32,9 +32,25 @@ struct CategoryView: View {
 }
 
 struct HomeView: View {
+    @Binding var health: Health
+
     var body: some View {
         ScrollView {
             VStack(spacing: 0) {
+                Picker(selection: $health, label: Text("Health")) {
+                    Text(Health.gluten.rawValue.capitalized)
+                        .tag(Health.gluten)
+                    Text(Health.keto.rawValue.capitalized)
+                        .tag(Health.keto)
+                    Text(Health.vegetarian.rawValue.capitalized)
+                        .tag(Health.vegetarian)
+                    Text(Health.vegan.rawValue.capitalized)
+                        .tag(Health.vegan)
+                }
+                .labelsHidden()
+                .pickerStyle(SegmentedPickerStyle())
+                .padding()
+
                 ForEach(0..<Home.categories.count) { index in
                     NavigationLink(destination: RecipesContainerView(query: Home.categories[index].query)) {
                         CategoryView(category: Home.categories[index])
@@ -47,6 +63,6 @@ struct HomeView: View {
 
 struct HomeView_Previews: PreviewProvider {
     static var previews: some View {
-        HomeView()
+        HomeView(health: .init(get: { .gluten }, set: { _ in }))
     }
 }
