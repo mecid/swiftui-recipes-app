@@ -39,10 +39,8 @@ final class Store<State, Action>: ObservableObject {
             .sink(receiveValue: send)
             .store(in: &cancellables)
     }
-}
 
-extension Store {
-    public func send<Value>(
+    func send<Value>(
         binding keyPath: KeyPath<State, Value>,
         _ action: @escaping (Value) -> Action
     ) -> Binding<Value> {
