@@ -8,6 +8,13 @@
 import Foundation
 import Combine
 
+enum Health: String, Codable {
+    case gluten = "gluten-free"
+    case keto = "keto-friendly"
+    case vegan
+    case vegetarian
+}
+
 struct Recipe: Codable, Hashable {
     let title: String
     let ingredients: [String]
@@ -53,7 +60,7 @@ struct RecipesService {
         static let count = 100
     }
 
-    func fetch(query: String, page: Int) -> AnyPublisher<[Recipe], Error> {
+    func fetch(query: String, health: Health = .gluten, page: Int = 1) -> AnyPublisher<[Recipe], Error> {
         let from = page * Constants.count
         let to = from + Constants.count
 
@@ -69,7 +76,7 @@ struct RecipesService {
             .init(name: "to", value: String(to)),
             .init(name: "app_id", value: "af1dd513"),
             .init(name: "app_key", value: "14d7fdc54649351cd3531103e09fc830"),
-            .init(name: "health", value: "vegan")
+            .init(name: "health", value: health.rawValue)
         ]
 
         guard let url = components.url else {
