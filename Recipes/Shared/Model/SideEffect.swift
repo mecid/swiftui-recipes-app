@@ -8,15 +8,14 @@
 import Combine
 
 enum SideEffect: Effect {
-    case search(query: String, page: Int = 0)
+    case search(query: String, health: Health, page: Int = 0)
 
     func mapToAction() -> AnyPublisher<AppAction, Never> {
         switch self {
-        case let .search(query, page):
-            return Current.fetch(query, page)
+        case let .search(query, health, page):
+            return Current.fetch(query, health, page)
                 .replaceError(with: [])
                 .map { .append(recipes: $0, nextPage: page + 1)}
-                .prepend(.set(loading: true))
                 .eraseToAnyPublisher()
         }
     }
