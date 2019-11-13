@@ -41,6 +41,18 @@ final class Store<State, Action>: ObservableObject {
     }
 }
 
+extension Store {
+    public func send<Value>(
+        binding keyPath: KeyPath<State, Value>,
+        _ action: @escaping (Value) -> Action
+    ) -> Binding<Value> {
+        Binding<Value>(
+            get: { self.state[keyPath: keyPath] },
+            set: { self.send(action($0)) }
+        )
+    }
+}
+
 extension Store where State: Codable {
     func save() {
         DispatchQueue.global(qos: .utility).async {
