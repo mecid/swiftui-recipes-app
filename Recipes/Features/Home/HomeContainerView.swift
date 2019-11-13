@@ -30,6 +30,7 @@ struct HomeContainerView: View {
                 FavoritesContainerView()
                     .environmentObject(self.store)
                     .embedInNavigation()
+                    .accentColor(.green)
         }
     }
 }

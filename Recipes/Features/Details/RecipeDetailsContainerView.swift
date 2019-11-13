@@ -45,6 +45,7 @@ struct RecipeDetailsContainerView: View {
             WebView(url: self.recipe.url)
                 .navigationBarTitle(Text(self.recipe.title), displayMode: .inline)
                 .embedInNavigation()
+                .accentColor(.green)
         }
     }
 }
