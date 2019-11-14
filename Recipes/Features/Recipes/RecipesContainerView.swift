@@ -11,8 +11,14 @@ struct RecipesContainerView: View {
     @EnvironmentObject var store: Store<AppState, AppAction>
     let query: String
 
+    private var recipes: [Recipe] {
+        store.state.recipes.compactMap {
+            store.state.allRecipes[$0]
+        }
+    }
+
     var body: some View {
-        RecipesView(recipes: store.state.recipes)
+        RecipesView(recipes: recipes)
             .navigationBarTitle(Text(query.capitalized), displayMode: .inline)
             .onAppear(perform: fetch)
     }

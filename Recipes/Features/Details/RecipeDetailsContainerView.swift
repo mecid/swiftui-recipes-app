@@ -11,10 +11,14 @@ struct RecipeDetailsContainerView: View {
     @EnvironmentObject var store: Store<AppState, AppAction>
     @State private var webViewShown = false
 
-    let recipe: Recipe
+    let uri: String
+
+    private var recipe: Recipe {
+        store.state.allRecipes[uri] ?? .mock
+    }
 
     private var isFavorited: Bool {
-        store.state.favorited.contains(recipe)
+        store.state.favorited.contains(recipe.uri)
     }
 
     var body: some View {

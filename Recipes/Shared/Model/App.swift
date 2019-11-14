@@ -7,14 +7,14 @@
 //
 
 struct AppState: Codable {
-    var recipes: [Recipe] = []
-    var favorited: [Recipe] = []
+    var allRecipes: [String: Recipe] = [:]
+    var recipes: [String] = []
+    var favorited: [String] = []
     var health: Health = .gluten
-    var nextPage = 0
 }
 
 enum AppAction {
-    case append(recipes: [Recipe], nextPage: Int)
+    case append(recipes: [Recipe])
     case saveToFavorites(recipe: Recipe)
     case removeFromFavorites(recipe: Recipe)
     case setHealth(health: Health)
@@ -23,16 +23,15 @@ enum AppAction {
 
 let appReducer: Reducer<AppState, AppAction> = Reducer { state, action in
     switch action {
-    case let .append(recipes, nextPage):
-        state.recipes.append(contentsOf: recipes)
-        state.nextPage = nextPage
+    case let .append(recipes):
+        recipes.forEach { state.allRecipes[$0.uri] = $0 }
+        state.recipes = recipes.map { $0.uri }
     case let .saveToFavorites(recipe):
-        state.favorited.append(recipe)
+        state.favorited.append(recipe.uri)
     case let .removeFromFavorites(recipe):
-        state.favorited.removeAll { $0.uri == recipe.uri }
+        state.favorited.removeAll { $0 == recipe.uri }
     case .resetState:
         state.recipes.removeAll()
-        state.nextPage = 0
     case .setHealth(let health):
         state.health = health
     }

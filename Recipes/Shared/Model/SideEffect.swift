@@ -15,7 +15,7 @@ enum SideEffect: Effect {
         case let .search(query, health, page):
             return Current.fetch(query, health, page)
                 .replaceError(with: [])
-                .map { .append(recipes: $0, nextPage: page + 1)}
+                .map { .append(recipes: $0)}
                 .eraseToAnyPublisher()
         }
     }

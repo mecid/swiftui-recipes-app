@@ -15,7 +15,7 @@ struct RecipesView: View {
     private var grid: some View {
         Grid {
             ForEach(recipes, id: \.self) { recipe in
-                NavigationLink(destination: RecipeDetailsContainerView(recipe: recipe)) {
+                NavigationLink(destination: RecipeDetailsContainerView(uri: recipe.uri)) {
                     ZStack(alignment: .bottomLeading) {
                         KFImage(recipe.image)
                             .resizable()
