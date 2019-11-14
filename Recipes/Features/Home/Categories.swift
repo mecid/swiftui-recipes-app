@@ -9,11 +9,11 @@ import Foundation
 
 struct Home {
     static let categories = [
-        Category(title: "Breakfast", query: "breakfast"),
-        Category(title: "Lunch", query: "lunch"),
-        Category(title: "Dinner", query: "dinner"),
-        Category(title: "Smoothie", query: "smoothie"),
-        Category(title: "Dessert", query: "dessert")
+        Category(title: "breakfast", query: "breakfast"),
+        Category(title: "lunch", query: "lunch"),
+        Category(title: "dinner", query: "dinner"),
+        Category(title: "smoothie", query: "smoothie"),
+        Category(title: "dessert", query: "dessert")
     ]
 }
 

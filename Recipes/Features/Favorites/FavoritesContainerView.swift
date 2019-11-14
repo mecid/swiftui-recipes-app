@@ -12,6 +12,6 @@ struct FavoritesContainerView: View {
 
     var body: some View {
         RecipesView(recipes: store.state.favorited)
-            .navigationBarTitle("Favorites")
+            .navigationBarTitle("favorites")
     }
 }

@@ -1,0 +1,21 @@
+/* 
+  Localizable.strings
+  Recipes
+
+  Created by Majid Jabrayilov on 11/14/19.
+  Copyright © 2019 Majid Jabrayilov. All rights reserved.
+*/
+"favorites" = "Favorites";
+"removeFromFavorites" = "Remove from favorites";
+"addToFavorites" = "Add to favorites";
+"recipes" = "Recipes";
+"health" = "Health";
+"breakfast" = "Breakfast";
+"lunch" = "Lunch";
+"dinner" = "Dinner";
+"smoothie" = "Smoothie";
+"dessert" = "Dessert";
+"gluten-free" = "Gluten-free";
+"keto-friendly" = "Keto";
+"vegetarian" = "Vegetarian";
+"vegan" = "Vegan";

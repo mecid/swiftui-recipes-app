@@ -38,7 +38,7 @@ struct RecipeDetailsContainerView: View {
                         Image(systemName: isFavorited ? "heart.fill" : "heart")
                             .resizable()
                             .frame(width: 24, height: 24)
-                            .accessibility(label: Text(isFavorited ? "Remove from favorites" : "Add to favorites"))
+                            .accessibility(label: Text(isFavorited ? "removeFromFavorites" : "addToFavorites"))
                     }
                 }
         ).sheet(isPresented: $webViewShown) {

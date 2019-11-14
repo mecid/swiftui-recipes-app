@@ -23,7 +23,7 @@ struct CategoryView: View {
                 endPoint: .bottom
             )
 
-            Text(category.title)
+            Text(LocalizedStringKey(category.title))
                 .font(.largeTitle)
                 .foregroundColor(.white)
                 .padding()
@@ -37,14 +37,14 @@ struct HomeView: View {
     var body: some View {
         ScrollView {
             VStack(spacing: 0) {
-                Picker(selection: $health, label: Text("Health")) {
-                    Text(Health.gluten.rawValue.capitalized)
+                Picker(selection: $health, label: Text("health")) {
+                    Text(LocalizedStringKey(Health.gluten.rawValue))
                         .tag(Health.gluten)
-                    Text(Health.keto.rawValue.capitalized)
+                    Text(LocalizedStringKey(Health.keto.rawValue))
                         .tag(Health.keto)
-                    Text(Health.vegetarian.rawValue.capitalized)
+                    Text(LocalizedStringKey(Health.vegetarian.rawValue))
                         .tag(Health.vegetarian)
-                    Text(Health.vegan.rawValue.capitalized)
+                    Text(LocalizedStringKey(Health.vegan.rawValue))
                         .tag(Health.vegan)
                 }
                 .labelsHidden()

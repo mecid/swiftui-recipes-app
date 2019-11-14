@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		1C6ABB1B2378B670004B3022 /* RandomAccessCollection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C6ABB1A2378B670004B3022 /* RandomAccessCollection.swift */; };
 		1C6ABB1F23795E01004B3022 /* LaunchCounter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C6ABB1E23795E01004B3022 /* LaunchCounter.swift */; };
+		1CC5BD31237D92B900305DBA /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1CC5BD30237D92B900305DBA /* Localizable.strings */; };
 		1CE54E3023781CEC00B55CA4 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CE54E2F23781CEC00B55CA4 /* AppDelegate.swift */; };
 		1CE54E3223781CEC00B55CA4 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CE54E3123781CEC00B55CA4 /* SceneDelegate.swift */; };
 		1CE54E3423781CEC00B55CA4 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CE54E3323781CEC00B55CA4 /* RootView.swift */; };
@@ -38,6 +39,7 @@
 /* Begin PBXFileReference section */
 		1C6ABB1A2378B670004B3022 /* RandomAccessCollection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RandomAccessCollection.swift; sourceTree = "<group>"; };
 		1C6ABB1E23795E01004B3022 /* LaunchCounter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchCounter.swift; sourceTree = "<group>"; };
+		1CC5BD30237D92B900305DBA /* Localizable.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; path = Localizable.strings; sourceTree = "<group>"; };
 		1CE54E2C23781CEC00B55CA4 /* Recipes.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Recipes.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1CE54E2F23781CEC00B55CA4 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		1CE54E3123781CEC00B55CA4 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -125,6 +127,7 @@
 				1CE54E3323781CEC00B55CA4 /* RootView.swift */,
 				1CE54E3123781CEC00B55CA4 /* SceneDelegate.swift */,
 				1CE54E60237846EF00B55CA4 /* Shared */,
+				1CC5BD30237D92B900305DBA /* Localizable.strings */,
 			);
 			path = Recipes;
 			sourceTree = "<group>";
@@ -280,6 +283,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				1CE54E3C23781CED00B55CA4 /* LaunchScreen.storyboard in Resources */,
+				1CC5BD31237D92B900305DBA /* Localizable.strings in Resources */,
 				1CE54E582378358900B55CA4 /* Assets.xcassets in Resources */,
 				1CE54E3923781CED00B55CA4 /* Preview Assets.xcassets in Resources */,
 			);

@@ -22,13 +22,13 @@ struct HomeContainerView: View {
     var body: some View {
         HomeView(health: health)
             .onAppear { self.store.send(.resetState) }
-            .navigationBarTitle("Recipes")
+            .navigationBarTitle("recipes")
             .navigationBarItems(
                 trailing: hasFavorites ? Button(action: { self.favoritesShown = true }) {
                     Image(systemName: "heart.fill")
                         .resizable()
                         .frame(width: 24, height: 24)
-                        .accessibility(label: Text("Favorites"))
+                        .accessibility(label: Text("favorites"))
                 } : nil
         ).sheet(isPresented: $favoritesShown) {
                 FavoritesContainerView()
