@@ -29,7 +29,7 @@ let appReducer: Reducer<AppState, AppAction> = Reducer { state, action in
     case let .saveToFavorites(recipe):
         state.favorited.append(recipe)
     case let .removeFromFavorites(recipe):
-        state.favorited.removeAll { $0.url == recipe.url }
+        state.favorited.removeAll { $0.uri == recipe.uri }
     case .resetState:
         state.recipes.removeAll()
         state.nextPage = 0
