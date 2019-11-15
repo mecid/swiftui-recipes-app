@@ -40,8 +40,8 @@ final class Store<State, Action>: ObservableObject {
             .store(in: &cancellables)
     }
 
-    func send<Value>(
-        binding keyPath: KeyPath<State, Value>,
+    func binding<Value>(
+        for keyPath: KeyPath<State, Value>,
         _ action: @escaping (Value) -> Action
     ) -> Binding<Value> {
         Binding<Value>(

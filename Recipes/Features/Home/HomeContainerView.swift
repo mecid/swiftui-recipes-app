@@ -16,7 +16,7 @@ struct HomeContainerView: View {
     }
 
     private var health: Binding<Health> {
-        store.send(binding: \.health) { .setHealth(health: $0) }
+        store.binding(for: \.health) { .setHealth(health: $0) }
     }
 
     var body: some View {
