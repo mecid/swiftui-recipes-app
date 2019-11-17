@@ -39,11 +39,13 @@ struct RecipeDetailsContainerView: View {
                             .font(.headline)
                             .accessibility(label: Text(isFavorited ? "removeFromFavorites" : "addToFavorites"))
                     }
-                    
+
                     Button(action: { self.shareShown = true }) {
                         Image(systemName: "square.and.arrow.up")
                             .font(.headline)
                             .accessibility(label: Text("share"))
+                    }.sheet(isPresented: $shareShown) {
+                        ShareView(items: [self.recipe.shareAs])
                     }
                 }
         ).sheet(isPresented: $stepsShown) {
@@ -51,8 +53,6 @@ struct RecipeDetailsContainerView: View {
                 .navigationBarTitle(Text(self.recipe.title), displayMode: .inline)
                 .embedInNavigation()
                 .accentColor(.green)
-        }.sheet(isPresented: $shareShown) {
-            ShareView(items: [self.recipe.shareAs])
         }
     }
 }
