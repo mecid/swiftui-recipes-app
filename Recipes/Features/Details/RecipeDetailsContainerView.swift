@@ -49,9 +49,8 @@ struct RecipeDetailsContainerView: View {
                     }
                 }
         ).sheet(isPresented: $stepsShown) {
-            WebView(url: self.recipe.shareAs)
+            SafariView(url: URL(string: self.recipe.url) ?? self.recipe.shareAs)
                 .navigationBarTitle(Text(self.recipe.title), displayMode: .inline)
-                .embedInNavigation()
                 .accentColor(.green)
         }
     }
