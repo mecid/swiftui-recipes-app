@@ -10,6 +10,7 @@ import SwiftUI
 
 struct RecipeDetailsView: View {
     let recipe: Recipe
+    let showSteps: () -> Void
 
     private var subheadline: some View {
         Text("\(Int(recipe.calories)) kcal ")
@@ -41,6 +42,10 @@ struct RecipeDetailsView: View {
                         Text("• \(ingridient)")
                             .fixedSize(horizontal: false, vertical: true)
                     }
+
+                    Button(action: showSteps) {
+                        Text("steps")
+                    }.buttonStyle(FilledButtonStyle())
                 }.padding(.horizontal)
             }
         }
@@ -50,7 +55,8 @@ struct RecipeDetailsView: View {
 struct RecipeDetailsView_Previews: PreviewProvider {
     static var previews: some View {
         RecipeDetailsView(
-            recipe: .mock
+            recipe: .mock,
+            showSteps: {}
         )
     }
 }

@@ -9,7 +9,9 @@ import SwiftUI
 
 struct RecipeDetailsContainerView: View {
     @EnvironmentObject var store: Store<AppState, AppAction>
-    @State private var webViewShown = false
+
+    @State private var stepsShown = false
+    @State private var shareShown = false
 
     let uri: String
 
@@ -22,16 +24,10 @@ struct RecipeDetailsContainerView: View {
     }
 
     var body: some View {
-        RecipeDetailsView(recipe: recipe)
+        RecipeDetailsView(recipe: recipe, showSteps: { self.stepsShown = true })
             .navigationBarTitle(Text(recipe.title), displayMode: .inline)
             .navigationBarItems(
                 trailing: HStack(spacing: 16) {
-                    Button(action: { self.webViewShown = true }) {
-                        Image(systemName: "list.number")
-                            .resizable()
-                            .frame(width: 24, height: 24)
-                    }
-
                     Button(action: {
                         if self.isFavorited {
                             self.store.send(.removeFromFavorites(recipe: self.recipe))
@@ -40,16 +36,23 @@ struct RecipeDetailsContainerView: View {
                         }
                     }) {
                         Image(systemName: isFavorited ? "heart.fill" : "heart")
-                            .resizable()
-                            .frame(width: 24, height: 24)
+                            .font(.headline)
                             .accessibility(label: Text(isFavorited ? "removeFromFavorites" : "addToFavorites"))
                     }
+                    
+                    Button(action: { self.shareShown = true }) {
+                        Image(systemName: "square.and.arrow.up")
+                            .font(.headline)
+                            .accessibility(label: Text("share"))
+                    }
                 }
-        ).sheet(isPresented: $webViewShown) {
+        ).sheet(isPresented: $stepsShown) {
             WebView(url: self.recipe.shareAs)
                 .navigationBarTitle(Text(self.recipe.title), displayMode: .inline)
                 .embedInNavigation()
                 .accentColor(.green)
+        }.sheet(isPresented: $shareShown) {
+            ShareView(items: [self.recipe.shareAs])
         }
     }
 }
