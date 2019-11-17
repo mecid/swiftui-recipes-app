@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1C3F4FBC238175CF00155EA4 /* ShareView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C3F4FBB238175CF00155EA4 /* ShareView.swift */; };
+		1C3F4FBE238178B500155EA4 /* ButtonStyles.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C3F4FBD238178B500155EA4 /* ButtonStyles.swift */; };
 		1C6ABB1B2378B670004B3022 /* RandomAccessCollection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C6ABB1A2378B670004B3022 /* RandomAccessCollection.swift */; };
 		1C6ABB1F23795E01004B3022 /* LaunchCounter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C6ABB1E23795E01004B3022 /* LaunchCounter.swift */; };
 		1CC5BD31237D92B900305DBA /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1CC5BD30237D92B900305DBA /* Localizable.strings */; };
@@ -37,6 +39,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		1C3F4FBB238175CF00155EA4 /* ShareView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareView.swift; sourceTree = "<group>"; };
+		1C3F4FBD238178B500155EA4 /* ButtonStyles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonStyles.swift; sourceTree = "<group>"; };
 		1C6ABB1A2378B670004B3022 /* RandomAccessCollection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RandomAccessCollection.swift; sourceTree = "<group>"; };
 		1C6ABB1E23795E01004B3022 /* LaunchCounter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchCounter.swift; sourceTree = "<group>"; };
 		1CC5BD30237D92B900305DBA /* Localizable.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; path = Localizable.strings; sourceTree = "<group>"; };
@@ -186,6 +190,8 @@
 			children = (
 				1CE54E6B2378584600B55CA4 /* ActivityView.swift */,
 				1CE54E782378630E00B55CA4 /* WebView.swift */,
+				1C3F4FBB238175CF00155EA4 /* ShareView.swift */,
+				1C3F4FBD238178B500155EA4 /* ButtonStyles.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -298,11 +304,13 @@
 			files = (
 				1CE54E5223782E3800B55CA4 /* HomeView.swift in Sources */,
 				1CE54E3023781CEC00B55CA4 /* AppDelegate.swift in Sources */,
+				1C3F4FBC238175CF00155EA4 /* ShareView.swift in Sources */,
 				1C6ABB1B2378B670004B3022 /* RandomAccessCollection.swift in Sources */,
 				1CE54E5023782DC600B55CA4 /* HomeContainerView.swift in Sources */,
 				1CE54E3223781CEC00B55CA4 /* SceneDelegate.swift in Sources */,
 				1CE54E4D23782CD700B55CA4 /* Recipe.swift in Sources */,
 				1CE54E5A23783C7300B55CA4 /* SideEffect.swift in Sources */,
+				1C3F4FBE238178B500155EA4 /* ButtonStyles.swift in Sources */,
 				1CE54E3423781CEC00B55CA4 /* RootView.swift in Sources */,
 				1CE54E4923781E0E00B55CA4 /* App.swift in Sources */,
 				1CE54E6F2378593100B55CA4 /* RecipeDetailsContainerView.swift in Sources */,
