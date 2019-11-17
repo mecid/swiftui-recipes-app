@@ -26,8 +26,7 @@ struct HomeContainerView: View {
             .navigationBarItems(
                 trailing: hasFavorites ? Button(action: { self.favoritesShown = true }) {
                     Image(systemName: "heart.fill")
-                        .resizable()
-                        .frame(width: 24, height: 24)
+                        .font(.headline)
                         .accessibility(label: Text("favorites"))
                 } : nil
         ).sheet(isPresented: $favoritesShown) {
