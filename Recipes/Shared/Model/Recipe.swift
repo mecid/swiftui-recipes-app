@@ -23,6 +23,7 @@ struct Recipe: Codable, Hashable {
     let calories: Double
     let totalWeight: Double
     let shareAs: URL
+    let url: String
     let cautions: [String]
 
     enum CodingKeys: String, CodingKey {
@@ -34,6 +35,7 @@ struct Recipe: Codable, Hashable {
         case totalWeight
         case shareAs
         case cautions
+        case url
     }
 }
 
@@ -46,6 +48,7 @@ extension Recipe {
         calories: 10,
         totalWeight: 10,
         shareAs: URL(string: "http://www.seriouseats.com/recipes/2008/03/sack-lunch-fairytale-picnic-fresh-pickled-vegetables-recipe.html")!,
+        url: "http://www.seriouseats.com/recipes/2008/03/sack-lunch-fairytale-picnic-fresh-pickled-vegetables-recipe.html",
         cautions: []
     )
 }
