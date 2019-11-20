@@ -13,29 +13,27 @@ struct RecipesView: View {
     let recipes: [Recipe]
 
     private var grid: some View {
-        Grid {
-            ForEach(recipes, id: \.self) { recipe in
-                NavigationLink(destination: RecipeDetailsContainerView(uri: recipe.uri)) {
-                    ZStack(alignment: .bottomLeading) {
-                        KFImage(recipe.image)
-                            .resizable()
-                            .renderingMode(.original)
-                            .aspectRatio(contentMode: .fill)
+        Grid(recipes, id: \.self) { recipe in
+            NavigationLink(destination: RecipeDetailsContainerView(uri: recipe.uri)) {
+                ZStack(alignment: .bottomLeading) {
+                    KFImage(recipe.image)
+                        .resizable()
+                        .renderingMode(.original)
+                        .aspectRatio(contentMode: .fill)
 
-                        LinearGradient(
-                            gradient: .init(colors: [Color.clear, .gray]),
-                            startPoint: .center,
-                            endPoint: .bottom
-                        )
+                    LinearGradient(
+                        gradient: .init(colors: [Color.clear, .gray]),
+                        startPoint: .center,
+                        endPoint: .bottom
+                    )
 
-                        Text(recipe.title)
-                            .font(.headline)
-                            .foregroundColor(.white)
-                            .padding()
-                    }
+                    Text(recipe.title)
+                        .font(.headline)
+                        .foregroundColor(.white)
+                        .padding()
                 }
             }
-        }.gridStyle(FixedColumnsGridStyle(columns: 2, itemHeight: 200, spacing: 0))
+        }.gridStyle(ModularGridStyle(columns: 2, rows: .fixed(200), spacing: 0, padding: .init()))
     }
 
     var body: some View {
