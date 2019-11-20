@@ -33,13 +33,27 @@ final class Store<State, Action>: ObservableObject {
     }
 
     func send<E: Effect>(_ effect: E) where E.Action == Action {
-        effect
+        var cancellable: AnyCancellable?
+        var didComplete = false
+
+        cancellable = effect
             .mapToAction()
             .receive(on: DispatchQueue.main)
-            .sink(receiveValue: send)
-            .store(in: &cancellables)
-    }
+            .sink(
+                receiveCompletion: { [weak self] _ in
+                    didComplete = true
+                    if let effectCancellable = cancellable {
+                        self?.cancellables.remove(effectCancellable)
+                    }
+                }, receiveValue: send)
 
+        if !didComplete, let effectCancellable = cancellable {
+            cancellables.insert(effectCancellable)
+        }
+    }
+}
+
+extension Store {
     func binding<Value>(
         for keyPath: KeyPath<State, Value>,
         _ action: @escaping (Value) -> Action
