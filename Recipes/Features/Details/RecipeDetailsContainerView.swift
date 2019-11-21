@@ -49,7 +49,10 @@ struct RecipeDetailsContainerView: View {
                     }
                 }
         ).sheet(isPresented: $stepsShown) {
-            SafariView(url: URL(string: self.recipe.url) ?? self.recipe.shareAs)
+            SafariView(
+                url: URL(string: self.recipe.url) ?? self.recipe.shareAs,
+                readerMode: true
+            )
                 .navigationBarTitle(Text(self.recipe.title), displayMode: .inline)
                 .accentColor(.green)
         }
