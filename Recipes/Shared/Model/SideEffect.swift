@@ -7,16 +7,17 @@
 //
 import Combine
 
-enum SideEffect: Effect {
-    case search(query: String, health: Health, page: Int = 0)
+extension Publisher where Failure == Never {
+    func eraseToEffect() -> Effect<Output> {
+        Effect(publisher: eraseToAnyPublisher())
+    }
+}
 
-    func mapToAction() -> AnyPublisher<AppAction, Never> {
-        switch self {
-        case let .search(query, health, page):
-            return Current.fetch(query, health, page)
-                .replaceError(with: [])
-                .map { .append(recipes: $0)}
-                .eraseToAnyPublisher()
-        }
+extension Effect {
+    static func search(query: String, health: Health, page: Int = 0) -> Effect<AppAction> {
+        Current.fetch(query, health, page)
+            .replaceError(with: [])
+            .map { .append(recipes: $0)}
+            .eraseToEffect()
     }
 }

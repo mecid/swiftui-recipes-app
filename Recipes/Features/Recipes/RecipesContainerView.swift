@@ -24,6 +24,6 @@ struct RecipesContainerView: View {
     }
 
     private func fetch() {
-        store.send(SideEffect.search(query: query, health: store.state.health))
+        store.send(.search(query: query, health: store.state.health))
     }
 }
