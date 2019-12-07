@@ -5,8 +5,7 @@
 //  Created by Majid Jabrayilov on 11/10/19.
 //  Copyright © 2019 Majid Jabrayilov. All rights reserved.
 //
-
-struct AppState: Codable {
+struct AppState: Codable, Equatable {
     var allRecipes: [String: Recipe] = [:]
     var recipes: [String] = []
     var favorited: [String] = []
@@ -21,7 +20,7 @@ enum AppAction {
     case resetState
 }
 
-let appReducer: Reducer<AppState, AppAction> = Reducer { state, action in
+func appReducer(state: inout AppState, action: AppAction) {
     switch action {
     case let .append(recipes):
         recipes.forEach { state.allRecipes[$0.uri] = $0 }
