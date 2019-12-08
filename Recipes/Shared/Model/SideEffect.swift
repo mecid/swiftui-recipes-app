@@ -7,17 +7,9 @@
 //
 import Combine
 
-extension Publisher where Failure == Never {
-    func eraseToEffect() -> Effect<Output> {
-        Effect(publisher: eraseToAnyPublisher())
-    }
-}
-
-extension Effect {
-    static func search(query: String, health: Health, page: Int = 0) -> Effect<AppAction> {
-        Current.fetch(query, health, page)
-            .replaceError(with: [])
-            .map { .append(recipes: $0)}
-            .eraseToEffect()
-    }
+func search(query: String, health: Health, page: Int = 0) -> AnyPublisher<AppAction, Never> {
+    Current.fetch(query, health, page)
+        .replaceError(with: [])
+        .map { .append(recipes: $0)}
+        .eraseToAnyPublisher()
 }

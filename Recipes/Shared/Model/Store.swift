@@ -8,13 +8,11 @@
 import SwiftUI
 import Combine
 
-struct Effect<Action> {
-    let publisher: AnyPublisher<Action, Never>
-}
-
 typealias Reducer<State, Action> = (inout State, Action) -> Void
 
 final class Store<State, Action>: ObservableObject {
+    typealias Effect = AnyPublisher<Action, Never>
+
     @Published private(set) var state: State
 
     private let reducer: Reducer<State, Action>
@@ -29,12 +27,11 @@ final class Store<State, Action>: ObservableObject {
         reducer(&state, action)
     }
 
-    func send(_ effect: Effect<Action>) {
+    func send(_ effect: Effect) {
         var cancellable: AnyCancellable?
         var didComplete = false
 
         cancellable = effect
-            .publisher
             .receive(on: DispatchQueue.main)
             .sink(
                 receiveCompletion: { [weak self] _ in
