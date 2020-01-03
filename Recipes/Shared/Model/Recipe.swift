@@ -53,6 +53,12 @@ extension Recipe {
     )
 }
 
+enum RecipesServiceError: Error {
+    case invalidURL
+    case url(error: URLError)
+    case decoder(error: Error)
+}
+
 struct RecipesService {
     private struct RecipesResponse: Decodable {
         let hits: [Hit]
@@ -66,7 +72,7 @@ struct RecipesService {
         static let count = 100
     }
 
-    func fetch(query: String, health: Health = .gluten, page: Int = 1) -> AnyPublisher<[Recipe], Error> {
+    func fetch(query: String, health: Health = .gluten, page: Int = 1) -> AnyPublisher<[Recipe], RecipesServiceError> {
         let from = page * Constants.count
         let to = from + Constants.count
 
@@ -86,15 +92,15 @@ struct RecipesService {
         ]
 
         guard let url = components.url else {
-            return Just([])
-                .setFailureType(to: Error.self)
-                .eraseToAnyPublisher()
+            return Fail<[Recipe], RecipesServiceError>(error: .invalidURL).eraseToAnyPublisher()
         }
 
         return URLSession.shared
             .dataTaskPublisher(for: URLRequest(url: url))
+            .mapError { RecipesServiceError.url(error: $0) }
             .map { $0.data }
             .decode(type: RecipesResponse.self, decoder: Current.decoder)
+            .mapError { RecipesServiceError.decoder(error: $0) }
             .map { $0.hits.map { $0.recipe } }
             .eraseToAnyPublisher()
     }
