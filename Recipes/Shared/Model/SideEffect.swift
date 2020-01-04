@@ -8,7 +8,8 @@
 import Combine
 
 func search(query: String, health: Health, page: Int = 0) -> AnyPublisher<AppAction, Never> {
-    Current.fetch(query, health, page)
+    Current.service
+        .fetch(query, health, page)
         .replaceError(with: [])
         .map { .append(recipes: $0)}
         .eraseToAnyPublisher()

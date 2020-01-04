@@ -12,12 +12,16 @@ import Combine
 // For more information check "How To Control The World" - Stephen Celis
 // https://vimeo.com/291588126
 
-struct Environment {
+struct World {
     var counter = LaunchCounter()
     var decoder = JSONDecoder()
     var encoder = JSONEncoder()
-    var fetch = RecipesService().fetch
+    var service: RecipesService = .live
     var files = FileManager.default
 }
 
-var Current = Environment()
+#if DEBUG
+var Current = World()
+#else
+let Current = World()
+#endif
