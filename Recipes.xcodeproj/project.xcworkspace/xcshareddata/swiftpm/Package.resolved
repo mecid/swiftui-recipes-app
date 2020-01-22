@@ -3,11 +3,11 @@
     "pins": [
       {
         "package": "Kingfisher",
-        "repositoryURL": "git@github.com:onevcat/Kingfisher.git",
+        "repositoryURL": "https://github.com/onevcat/Kingfisher",
         "state": {
           "branch": null,
-          "revision": "3f0200463a2c747f985fa32845e7b70b0172474c",
-          "version": "5.9.0"
+          "revision": "44bfa76787a0f07e4d5ae3304e9d4f631fd519bd",
+          "version": "5.13.0"
         }
       }
     ]
