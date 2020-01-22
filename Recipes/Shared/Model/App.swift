@@ -31,6 +31,9 @@ func appReducer(state: inout AppState, action: AppAction) {
         state.favorited.removeAll { $0 == recipe.uri }
     case .resetState:
         state.recipes.removeAll()
+        state.allRecipes = state.allRecipes.filter { key, _ in
+            state.favorited.contains(key)
+        }
     case .setHealth(let health):
         state.health = health
     }
