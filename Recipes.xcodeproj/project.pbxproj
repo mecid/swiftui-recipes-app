@@ -30,7 +30,6 @@
 		1CE54E5D23783FB600B55CA4 /* RecipesContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CE54E5C23783FB600B55CA4 /* RecipesContainerView.swift */; };
 		1CE54E5F23783FD400B55CA4 /* RecipesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CE54E5E23783FD400B55CA4 /* RecipesView.swift */; };
 		1CE54E632378496800B55CA4 /* KingfisherSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = 1CE54E622378496800B55CA4 /* KingfisherSwiftUI */; };
-		1CE54E69237856C300B55CA4 /* Grid in Frameworks */ = {isa = PBXBuildFile; productRef = 1CE54E68237856C300B55CA4 /* Grid */; };
 		1CE54E6C2378584600B55CA4 /* ActivityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CE54E6B2378584600B55CA4 /* ActivityView.swift */; };
 		1CE54E6F2378593100B55CA4 /* RecipeDetailsContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CE54E6E2378593100B55CA4 /* RecipeDetailsContainerView.swift */; };
 		1CE54E712378596600B55CA4 /* RecipeDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CE54E702378596600B55CA4 /* RecipeDetailsView.swift */; };
@@ -75,7 +74,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1CE54E69237856C300B55CA4 /* Grid in Frameworks */,
 				1CE54E632378496800B55CA4 /* KingfisherSwiftUI in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -240,7 +238,6 @@
 			name = Recipes;
 			packageProductDependencies = (
 				1CE54E622378496800B55CA4 /* KingfisherSwiftUI */,
-				1CE54E68237856C300B55CA4 /* Grid */,
 			);
 			productName = Recipes;
 			productReference = 1CE54E2C23781CEC00B55CA4 /* Recipes.app */;
@@ -272,7 +269,6 @@
 			mainGroup = 1CE54E2323781CEC00B55CA4;
 			packageReferences = (
 				1CE54E612378496800B55CA4 /* XCRemoteSwiftPackageReference "Kingfisher" */,
-				1CE54E67237856C300B55CA4 /* XCRemoteSwiftPackageReference "Grid" */,
 			);
 			productRefGroup = 1CE54E2D23781CEC00B55CA4 /* Products */;
 			projectDirPath = "";
@@ -536,14 +532,6 @@
 				minimumVersion = 5.9.0;
 			};
 		};
-		1CE54E67237856C300B55CA4 /* XCRemoteSwiftPackageReference "Grid" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "git@github.com:SwiftUIExtensions/Grid.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 0.6.4;
-			};
-		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -551,11 +539,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 1CE54E612378496800B55CA4 /* XCRemoteSwiftPackageReference "Kingfisher" */;
 			productName = KingfisherSwiftUI;
-		};
-		1CE54E68237856C300B55CA4 /* Grid */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 1CE54E67237856C300B55CA4 /* XCRemoteSwiftPackageReference "Grid" */;
-			productName = Grid;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

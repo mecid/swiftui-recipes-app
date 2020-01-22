@@ -5,15 +5,14 @@
 //  Created by Majid Jabrayilov on 11/10/19.
 //  Copyright © 2019 Majid Jabrayilov. All rights reserved.
 //
-import Grid
 import KingfisherSwiftUI
 import SwiftUI
 
 struct RecipesView: View {
     let recipes: [Recipe]
 
-    private var grid: some View {
-        Grid(recipes, id: \.self) { recipe in
+    private var list: some View {
+        List(recipes, id: \.self) { recipe in
             NavigationLink(destination: RecipeDetailsContainerView(uri: recipe.uri)) {
                 ZStack(alignment: .bottomLeading) {
                     KFImage(recipe.image)
@@ -33,7 +32,7 @@ struct RecipesView: View {
                         .padding()
                 }
             }
-        }.gridStyle(ModularGridStyle(columns: 2, rows: .fixed(200), spacing: 0, padding: .init()))
+        }
     }
 
     var body: some View {
@@ -41,7 +40,7 @@ struct RecipesView: View {
             if recipes.isEmpty {
                 ActivityView()
             } else {
-                grid
+                list
             }
         }
     }
