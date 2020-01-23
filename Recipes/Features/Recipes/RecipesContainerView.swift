@@ -24,6 +24,8 @@ struct RecipesContainerView: View {
     }
 
     private func fetch() {
-        store.send(search(query: query, health: store.state.health))
+        if store.state.recipes.isEmpty {
+            store.send(search(query: query, health: store.state.health))
+        }
     }
 }
