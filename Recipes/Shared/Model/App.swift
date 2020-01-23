@@ -36,5 +36,6 @@ func appReducer(state: inout AppState, action: AppAction) {
         }
     case .setHealth(let health):
         state.health = health
+        state.recipes.removeAll()
     }
 }
