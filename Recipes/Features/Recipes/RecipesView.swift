@@ -27,7 +27,7 @@ struct RecipesView: View {
                     )
 
                     Text(recipe.title)
-                        .font(.headline)
+                        .font(.title)
                         .foregroundColor(.white)
                         .padding()
                 }
