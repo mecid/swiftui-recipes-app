@@ -61,7 +61,9 @@ final class Store<State, Action>: ObservableObject {
             cancellables.insert(cancellable)
         }
     }
+}
 
+extension Store {
     func view<ViewState, ViewAction>(
         state toLocalState: @escaping (State) -> ViewState,
         action toGlobalAction: @escaping (ViewAction) -> Action
