@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct RecipeDetailsContainerView: View {
-    @EnvironmentObject var store: Store<AppState, AppAction>
+    @EnvironmentObject var store: AppStore
 
     @State private var stepsShown = false
     @State private var shareShown = false

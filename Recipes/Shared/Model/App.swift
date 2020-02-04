@@ -39,3 +39,5 @@ func appReducer(state: inout AppState, action: AppAction) {
         state.recipes.removeAll()
     }
 }
+
+typealias AppStore = Store<AppState, AppAction>

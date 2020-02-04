@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct RecipesContainerView: View {
-    @EnvironmentObject var store: Store<AppState, AppAction>
+    @EnvironmentObject var store: AppStore
     let query: String
 
     private var recipes: [Recipe] {

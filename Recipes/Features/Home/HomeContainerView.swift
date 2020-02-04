@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct HomeContainerView: View {
-    @EnvironmentObject var store: Store<AppState, AppAction>
+    @EnvironmentObject var store: AppStore
     @State private var favoritesShown = false
 
     private var hasFavorites: Bool {

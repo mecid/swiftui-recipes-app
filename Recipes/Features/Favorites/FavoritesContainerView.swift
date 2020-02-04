@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct FavoritesContainerView: View {
-    @EnvironmentObject var store: Store<AppState, AppAction>
+    @EnvironmentObject var store: AppStore
 
     private var favorites: [Recipe] {
         store.state.favorited.compactMap {
