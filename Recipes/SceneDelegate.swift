@@ -11,7 +11,8 @@ import SwiftUI
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     var window: UIWindow?
-    private let store = AppStore(initialState: .init(), reducer: appReducer)
+    private let environment = World()
+    private lazy var store = AppStore(initialState: .init(), reducer: appReducer, environment: environment)
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         if let windowScene = scene as? UIWindowScene {
@@ -25,11 +26,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             window.makeKeyAndVisible()
         }
 
-        store.load()
+        store.send(.load)
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {
-        store.save()
+        store.send(.save)
     }
 
     func sceneDidBecomeActive(_ scene: UIScene) {
@@ -43,14 +44,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
 
     func sceneWillEnterForeground(_ scene: UIScene) {
-        Current.counter.launch()
+        environment.counter.launch()
 
-        if Current.counter.isReadyToRate {
+        if environment.counter.isReadyToRate {
             SKStoreReviewController.requestReview()
         }
-    }
-
-    func sceneDidEnterBackground(_ scene: UIScene) {
-        store.save()
     }
 }
