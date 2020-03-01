@@ -104,14 +104,15 @@ private func fetch(query: String, health: Health = .gluten, page: Int = 1) -> An
     ]
 
     guard let url = components.url else {
-        return Fail<[Recipe], RecipesServiceError>(error: .invalidURL).eraseToAnyPublisher()
+        return Fail<[Recipe], RecipesServiceError>(error: .invalidURL)
+            .eraseToAnyPublisher()
     }
 
     return URLSession.shared
         .dataTaskPublisher(for: URLRequest(url: url))
         .mapError { RecipesServiceError.url(error: $0) }
         .map { $0.data }
-        .decode(type: RecipesResponse.self, decoder: Current.decoder)
+        .decode(type: RecipesResponse.self, decoder: JSONDecoder())
         .mapError { RecipesServiceError.decoder(error: $0) }
         .map { $0.hits.map { $0.recipe } }
         .eraseToAnyPublisher()
