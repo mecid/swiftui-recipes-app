@@ -10,12 +10,15 @@ import Foundation
 
 // For more information check "How To Control The World" - Stephen Celis
 // https://vimeo.com/291588126
-struct World {
-    var counter = LaunchCounter()
-    var decoder = JSONDecoder()
-    var encoder = JSONEncoder()
-    var service: RecipesService = .live
-    var files = FileManager.default
+final class World {
+    let session = URLSession.shared
+    let counter = LaunchCounter()
+    let decoder = JSONDecoder()
+    let encoder = JSONEncoder()
+    let files = FileManager.default
+
+    lazy var service: RecipesService =
+        RecipesServiceLive(session: session, decoder: decoder)
 }
 
 struct AppState: Codable, Equatable {
@@ -60,7 +63,7 @@ func appReducer(
         state.recipes.removeAll()
     case let .search(query, page):
         return environment.service
-            .fetch(query, state.health, page)
+            .fetch(matching: query, in: state.health, page: page)
             .replaceError(with: [])
             .map { .append(recipes: $0)}
             .eraseToAnyPublisher()
