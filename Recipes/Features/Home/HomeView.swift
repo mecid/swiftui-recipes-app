@@ -18,7 +18,7 @@ struct CategoryView: View {
                 .aspectRatio(contentMode: .fill)
 
             LinearGradient(
-                gradient: .init(colors: [Color.clear, .secondary]),
+                gradient: .init(colors: [Color.clear, Color.black.opacity(0.7)]),
                 startPoint: .center,
                 endPoint: .bottom
             )
