@@ -21,7 +21,7 @@ struct RecipesView: View {
                         .aspectRatio(contentMode: .fill)
 
                     LinearGradient(
-                        gradient: .init(colors: [Color.clear, .gray]),
+                        gradient: .init(colors: [Color.clear, Color.black.opacity(0.7)]),
                         startPoint: .center,
                         endPoint: .bottom
                     )
