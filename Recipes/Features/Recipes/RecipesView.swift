@@ -11,25 +11,29 @@ import SwiftUI
 struct RecipesView: View {
     let recipes: [Recipe]
 
-    private var list: some View {
-        List(recipes, id: \.self) { recipe in
-            NavigationLink(destination: RecipeDetailsContainerView(uri: recipe.uri)) {
-                ZStack(alignment: .bottomLeading) {
-                    KFImage(recipe.image)
-                        .resizable()
-                        .renderingMode(.original)
-                        .aspectRatio(contentMode: .fill)
+    private var content: some View {
+        ScrollView {
+            VStack(spacing: 0) {
+                ForEach(recipes, id: \.self) { recipe in
+                    NavigationLink(destination: RecipeDetailsContainerView(uri: recipe.uri)) {
+                        ZStack(alignment: .bottomLeading) {
+                            KFImage(recipe.image)
+                                .resizable()
+                                .renderingMode(.original)
+                                .aspectRatio(contentMode: .fill)
 
-                    LinearGradient(
-                        gradient: .init(colors: [Color.clear, Color.black.opacity(0.7)]),
-                        startPoint: .center,
-                        endPoint: .bottom
-                    )
+                            LinearGradient(
+                                gradient: .init(colors: [Color.clear, Color.black.opacity(0.7)]),
+                                startPoint: .center,
+                                endPoint: .bottom
+                            )
 
-                    Text(recipe.title)
-                        .font(.title)
-                        .foregroundColor(.white)
-                        .padding()
+                            Text(recipe.title)
+                                .font(.title)
+                                .foregroundColor(.white)
+                                .padding()
+                        }
+                    }
                 }
             }
         }
@@ -40,7 +44,7 @@ struct RecipesView: View {
             if recipes.isEmpty {
                 ActivityView()
             } else {
-                list
+                content
             }
         }
     }
