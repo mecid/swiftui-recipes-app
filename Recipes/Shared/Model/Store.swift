@@ -40,7 +40,7 @@ final class Store<State, Action, Environment>: ObservableObject {
         cancellable = effect
             .receive(on: DispatchQueue.main)
             .sink(
-                receiveCompletion: { [weak self] _ in
+                receiveCompletion: { [weak self, weak cancellable] _ in
                     didComplete = true
                     if let cancellable = cancellable {
                         self?.effectCancellables.remove(cancellable)
