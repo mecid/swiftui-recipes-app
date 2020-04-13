@@ -45,7 +45,7 @@ final class Store<State, Action, Environment>: ObservableObject {
                     if let cancellable = cancellable {
                         self?.effectCancellables.remove(cancellable)
                     }
-                }, receiveValue: send)
+                }, receiveValue: { [weak self] in self?.send($0) })
         if !didComplete, let cancellable = cancellable {
             effectCancellables.insert(cancellable)
         }
