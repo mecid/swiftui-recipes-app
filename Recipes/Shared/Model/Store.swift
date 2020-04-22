@@ -15,9 +15,7 @@ final class Store<State, Action, Environment>: ObservableObject {
     @Published private(set) var state: State
     private let reducer: Reducer<State, Action, Environment>
     private let environment: Environment
-
     private var effectCancellables: Set<AnyCancellable> = []
-    private var projectionCancellable: AnyCancellable?
 
     init(
         initialState: State,
@@ -57,7 +55,7 @@ import SwiftUI
 extension Store {
     func binding<Value>(
         for keyPath: KeyPath<State, Value>,
-        _ toAction: @escaping (Value) -> Action
+        toAction: @escaping (Value) -> Action
     ) -> Binding<Value> {
         Binding<Value> (
             get: { self.state[keyPath: keyPath] },

@@ -38,14 +38,9 @@ struct HomeView: View {
         ScrollView {
             VStack(spacing: 0) {
                 Picker(selection: $health, label: Text("health")) {
-                    Text(LocalizedStringKey(Health.gluten.rawValue))
-                        .tag(Health.gluten)
-                    Text(LocalizedStringKey(Health.keto.rawValue))
-                        .tag(Health.keto)
-                    Text(LocalizedStringKey(Health.vegetarian.rawValue))
-                        .tag(Health.vegetarian)
-                    Text(LocalizedStringKey(Health.vegan.rawValue))
-                        .tag(Health.vegan)
+                    ForEach(Health.allCases, id: \.self) { health in
+                        Text(LocalizedStringKey(health.rawValue)).tag(health)
+                    }
                 }
                 .labelsHidden()
                 .pickerStyle(SegmentedPickerStyle())

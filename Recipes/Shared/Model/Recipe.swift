@@ -8,11 +8,11 @@
 import Foundation
 import Combine
 
-enum Health: String, Codable {
-    case gluten = "gluten-free"
-    case keto = "keto-friendly"
+enum Health: String, CaseIterable, Codable {
     case vegan
     case vegetarian
+    case gluten = "gluten-free"
+    case keto = "keto-friendly"
 }
 
 struct Recipe: Codable, Hashable {
