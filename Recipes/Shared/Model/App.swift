@@ -40,11 +40,7 @@ enum AppAction {
     case save
 }
 
-func appReducer(
-    state: inout AppState,
-    action: AppAction,
-    environment: World
-) -> AnyPublisher<AppAction, Never>? {
+let appReducer: Reducer<AppState, AppAction, World> = Reducer { state, action, environment in
     switch action {
     case let .append(recipes):
         recipes.forEach { state.allRecipes[$0.uri] = $0 }
@@ -85,7 +81,7 @@ func appReducer(
             .eraseToAnyPublisher()
     }
 
-    return Empty().eraseToAnyPublisher()
+    return Empty(completeImmediately: true).eraseToAnyPublisher()
 }
 
-typealias AppStore = Store<AppState, AppAction, World>
+typealias AppStore = Store<AppState, AppAction>

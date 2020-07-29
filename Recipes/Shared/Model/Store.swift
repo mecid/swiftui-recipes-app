@@ -8,45 +8,155 @@
 import Foundation
 import Combine
 
-typealias Reducer<State, Action, Environment> =
-    (inout State, Action, Environment) -> AnyPublisher<Action, Never>?
+struct Reducer<State, Action, Environment> {
+    let reduce: (inout State, Action, Environment) -> AnyPublisher<Action, Never>
 
-final class Store<State, Action, Environment>: ObservableObject {
+    func callAsFunction(
+        _ state: inout State,
+        _ action: Action,
+        _ environment: Environment
+    ) -> AnyPublisher<Action, Never> {
+        reduce(&state, action, environment)
+    }
+
+    func indexed<LiftedState, LiftedAction, LiftedEnvironment, Key>(
+        keyPath: WritableKeyPath<LiftedState, [Key: State]>,
+        extractAction: @escaping (LiftedAction) -> (Key, Action)?,
+        embedAction: @escaping (Key, Action) -> LiftedAction,
+        extractEnvironment: @escaping (LiftedEnvironment) -> Environment
+    ) -> Reducer<LiftedState, LiftedAction, LiftedEnvironment> {
+        .init { state, action, environment in
+            guard let (index, action) = extractAction(action) else {
+                return Empty(completeImmediately: true).eraseToAnyPublisher()
+            }
+            let environment = extractEnvironment(environment)
+            return self.optional().reduce(&state[keyPath: keyPath][index], action, environment)
+                .map { embedAction(index, $0) }
+                .eraseToAnyPublisher()
+        }
+    }
+
+    func indexed<LiftedState, LiftedAction, LiftedEnvironment>(
+        keyPath: WritableKeyPath<LiftedState, [State]>,
+        extractAction: @escaping (LiftedAction) -> (Int, Action)?,
+        embedAction: @escaping (Int, Action) -> LiftedAction,
+        extractEnvironment: @escaping (LiftedEnvironment) -> Environment
+    ) -> Reducer<LiftedState, LiftedAction, LiftedEnvironment> {
+        .init { state, action, environment in
+            guard let (index, action) = extractAction(action) else {
+                return Empty(completeImmediately: true).eraseToAnyPublisher()
+            }
+            let environment = extractEnvironment(environment)
+            return self.reduce(&state[keyPath: keyPath][index], action, environment)
+                .map { embedAction(index, $0) }
+                .eraseToAnyPublisher()
+        }
+    }
+
+    func optional() -> Reducer<State?, Action, Environment> {
+        .init { state, action, environment in
+            if state != nil {
+                return self(&state!, action, environment)
+            } else {
+                return Empty(completeImmediately: true).eraseToAnyPublisher()
+            }
+        }
+    }
+
+    func lift<LiftedState, LiftedAction, LiftedEnvironment>(
+        keyPath: WritableKeyPath<LiftedState, State>,
+        extractAction: @escaping (LiftedAction) -> Action?,
+        embedAction: @escaping (Action) -> LiftedAction,
+        extractEnvironment: @escaping (LiftedEnvironment) -> Environment
+    ) -> Reducer<LiftedState, LiftedAction, LiftedEnvironment> {
+        .init { state, action, environment in
+            let environment = extractEnvironment(environment)
+            guard let action = extractAction(action) else {
+                return Empty(completeImmediately: true).eraseToAnyPublisher()
+            }
+            let effect = self(&state[keyPath: keyPath], action, environment)
+            return effect.map(embedAction).eraseToAnyPublisher()
+        }
+    }
+
+    static func combine(_ reducers: Reducer...) -> Reducer {
+        .init { state, action, environment in
+            let effects = reducers.compactMap { $0(&state, action, environment) }
+            return Publishers.MergeMany(effects).eraseToAnyPublisher()
+        }
+    }
+}
+
+import os.log
+
+extension Reducer {
+    func signpost(log: OSLog = OSLog(subsystem: "com.aaplab.food", category: "Reducer")) -> Reducer {
+        .init { state, action, environment in
+            os_signpost(.begin, log: log, name: "Action", "%s", String(reflecting: action))
+            let effect = self.reduce(&state, action, environment)
+            os_signpost(.end, log: log, name: "Action", "%s", String(reflecting: action))
+            return effect
+        }
+    }
+}
+
+final class Store<State, Action>: ObservableObject {
     @Published private(set) var state: State
-    private let reducer: Reducer<State, Action, Environment>
-    private let environment: Environment
-    private var effectCancellables: Set<AnyCancellable> = []
 
-    init(
+    private let reduce: (inout State, Action) -> AnyPublisher<Action, Never>
+    private var effectCancellables: [UUID: AnyCancellable] = [:]
+
+    init<Environment>(
         initialState: State,
-        reducer: @escaping Reducer<State, Action, Environment>,
+        reducer: Reducer<State, Action, Environment>,
         environment: Environment
     ) {
         self.state = initialState
-        self.reducer = reducer
-        self.environment = environment
+        self.reduce = { state, action in
+            reducer(&state, action, environment)
+        }
     }
 
     func send(_ action: Action) {
-        guard let effect = reducer(&state, action, environment) else {
-            return
-        }
+        let effect = reduce(&state, action)
 
         var didComplete = false
-        var cancellable: AnyCancellable?
+        let uuid = UUID()
 
-        cancellable = effect
+        let cancellable = effect
             .receive(on: DispatchQueue.main)
             .sink(
-                receiveCompletion: { [weak self, weak cancellable] _ in
+                receiveCompletion: { [weak self] _ in
                     didComplete = true
-                    if let cancellable = cancellable {
-                        self?.effectCancellables.remove(cancellable)
-                    }
-                }, receiveValue: { [weak self] in self?.send($0) })
-        if !didComplete, let cancellable = cancellable {
-            effectCancellables.insert(cancellable)
+                    self?.effectCancellables[uuid] = nil
+                },
+                receiveValue: { [weak self] in self?.send($0) }
+            )
+
+        if !didComplete {
+            effectCancellables[uuid] = cancellable
         }
+    }
+
+    func transformed<TransformedState: Equatable, TransformedAction>(
+        transformState: @escaping (State) -> TransformedState,
+        transformAction: @escaping (TransformedAction) -> Action
+    ) -> Store<TransformedState, TransformedAction> {
+        let store = Store<TransformedState, TransformedAction>(
+            initialState: transformState(state),
+            reducer: Reducer { _, action, _ in
+                self.send(transformAction(action))
+                return Empty(completeImmediately: true).eraseToAnyPublisher()
+            },
+            environment: ()
+        )
+
+        $state
+            .map(transformState)
+            .removeDuplicates()
+            .assign(to: &store.$state)
+
+        return store
     }
 }
 
@@ -57,7 +167,7 @@ extension Store {
         for keyPath: KeyPath<State, Value>,
         toAction: @escaping (Value) -> Action
     ) -> Binding<Value> {
-        Binding<Value> (
+        Binding<Value>(
             get: { self.state[keyPath: keyPath] },
             set: { self.send(toAction($0)) }
         )
