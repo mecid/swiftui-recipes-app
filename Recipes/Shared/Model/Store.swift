@@ -30,7 +30,8 @@ struct Reducer<State, Action, Environment> {
                 return Empty(completeImmediately: true).eraseToAnyPublisher()
             }
             let environment = extractEnvironment(environment)
-            return self.optional().reduce(&state[keyPath: keyPath][index], action, environment)
+            return self.optional()
+                .reduce(&state[keyPath: keyPath][index], action, environment)
                 .map { embedAction(index, $0) }
                 .eraseToAnyPublisher()
         }
