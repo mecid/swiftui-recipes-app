@@ -99,6 +99,15 @@ extension Reducer {
             return effect
         }
     }
+
+    func log(log: OSLog = OSLog(subsystem: "com.aaplab.food", category: "Reducer")) -> Reducer {
+        .init { state, action, environment in
+            os_log(.default, log: log, "Action %s", String(reflecting: action))
+            let effect = self.reduce(&state, action, environment)
+            os_log(.default, log: log, "State %s", String(reflecting: state))
+            return effect
+        }
+    }
 }
 
 final class Store<State, Action>: ObservableObject {
