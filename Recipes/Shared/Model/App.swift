@@ -10,15 +10,15 @@ import Foundation
 
 // For more information check "How To Control The World" - Stephen Celis
 // https://vimeo.com/291588126
-final class World {
-    let session = URLSession.shared
+struct AppEnvironment {
     let counter = LaunchCounter()
     let decoder = JSONDecoder()
     let encoder = JSONEncoder()
     let files = FileManager.default
 
-    lazy var service: RecipesService =
-        RecipesServiceLive(session: session, decoder: decoder)
+    var service: RecipesService {
+        RecipesServiceLive(session: .shared, decoder: decoder)
+    }
 }
 
 struct AppState: Codable, Equatable {
@@ -40,7 +40,7 @@ enum AppAction {
     case save
 }
 
-let appReducer: Reducer<AppState, AppAction, World> = Reducer { state, action, environment in
+let appReducer: Reducer<AppState, AppAction, AppEnvironment> = Reducer { state, action, environment in
     switch action {
     case let .append(recipes):
         recipes.forEach { state.allRecipes[$0.uri] = $0 }

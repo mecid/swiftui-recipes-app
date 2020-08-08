@@ -12,7 +12,7 @@ import SwiftUI
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     var window: UIWindow?
 
-    private let environment = World()
+    private let environment = AppEnvironment()
     private lazy var store = AppStore(
         initialState: AppState(),
         reducer: appReducer,
