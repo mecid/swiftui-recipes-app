@@ -115,12 +115,15 @@ final class Store<State, Action>: ObservableObject {
 
     private let reduce: (inout State, Action) -> AnyPublisher<Action, Never>
     private var effectCancellables: [UUID: AnyCancellable] = [:]
+    private let queue: DispatchQueue
 
     init<Environment>(
         initialState: State,
         reducer: Reducer<State, Action, Environment>,
-        environment: Environment
+        environment: Environment,
+        subscriptionQueue: DispatchQueue = .init(label: "com.aaplab.store")
     ) {
+        self.queue = subscriptionQueue
         self.state = initialState
         self.reduce = { state, action in
             reducer(&state, action, environment)
@@ -134,6 +137,7 @@ final class Store<State, Action>: ObservableObject {
         let uuid = UUID()
 
         let cancellable = effect
+            .subscribe(on: queue)
             .receive(on: DispatchQueue.main)
             .sink(
                 receiveCompletion: { [weak self] _ in
@@ -148,21 +152,21 @@ final class Store<State, Action>: ObservableObject {
         }
     }
 
-    func transformed<TransformedState: Equatable, TransformedAction>(
-        transformState: @escaping (State) -> TransformedState,
-        transformAction: @escaping (TransformedAction) -> Action
-    ) -> Store<TransformedState, TransformedAction> {
-        let store = Store<TransformedState, TransformedAction>(
-            initialState: transformState(state),
+    func derived<DerivedState: Equatable, ExtractedAction>(
+        deriveState: @escaping (State) -> DerivedState,
+        embedAction: @escaping (ExtractedAction) -> Action
+    ) -> Store<DerivedState, ExtractedAction> {
+        let store = Store<DerivedState, ExtractedAction>(
+            initialState: deriveState(state),
             reducer: Reducer { _, action, _ in
-                self.send(transformAction(action))
-                return Empty(completeImmediately: true).eraseToAnyPublisher()
+                self.send(embedAction(action))
+                return Empty().eraseToAnyPublisher()
             },
             environment: ()
         )
 
         $state
-            .map(transformState)
+            .map(deriveState)
             .removeDuplicates()
             .assign(to: &store.$state)
 
