@@ -50,9 +50,8 @@ let appReducer: Reducer<AppState, AppAction, AppEnvironment> = Reducer { state, 
     case let .removeFromFavorites(recipe):
         state.favorited.removeAll { $0 == recipe.uri }
     case .resetState:
-        state.recipes.removeAll()
         state.allRecipes = state.allRecipes.filter { key, _ in
-            state.favorited.contains(key)
+            state.favorited.contains(key) || state.recipes.contains(key)
         }
     case .setHealth(let health):
         state.health = health
