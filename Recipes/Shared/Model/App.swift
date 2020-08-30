@@ -26,6 +26,7 @@ struct AppState: Codable, Equatable {
     var recipes: [String] = []
     var favorited: [String] = []
     var health: Health = .gluten
+    var currentQuery = ""
 }
 
 enum AppAction {
@@ -57,11 +58,17 @@ let appReducer: Reducer<AppState, AppAction, AppEnvironment> = Reducer { state, 
     case .setHealth(let health):
         state.health = health
         state.recipes.removeAll()
-    case let .search(query, page):
+        state.currentQuery = ""
+    case let .search(newQuery, page):
+        guard state.currentQuery != newQuery else {
+            return Empty().eraseToAnyPublisher()
+        }
+
         state.recipes.removeAll()
+        state.currentQuery = newQuery
 
         return environment.service
-            .fetch(matching: query, in: state.health, page: page)
+            .fetch(matching: state.currentQuery, in: state.health, page: page)
             .replaceError(with: [])
             .map { .append(recipes: $0)}
             .eraseToAnyPublisher()
