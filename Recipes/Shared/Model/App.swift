@@ -50,13 +50,16 @@ let appReducer: Reducer<AppState, AppAction, AppEnvironment> = Reducer { state, 
     case let .removeFromFavorites(recipe):
         state.favorited.removeAll { $0 == recipe.uri }
     case .resetState:
+        state.recipes.removeAll()
         state.allRecipes = state.allRecipes.filter { key, _ in
-            state.favorited.contains(key) || state.recipes.contains(key)
+            state.favorited.contains(key)
         }
     case .setHealth(let health):
         state.health = health
         state.recipes.removeAll()
     case let .search(query, page):
+        state.recipes.removeAll()
+
         return environment.service
             .fetch(matching: query, in: state.health, page: page)
             .replaceError(with: [])
