@@ -21,7 +21,6 @@ struct HomeContainerView: View {
 
     var body: some View {
         HomeView(health: health)
-            .onAppear { self.store.send(.resetState) }
             .navigationBarTitle("recipes")
             .navigationBarItems(
                 trailing: hasFavorites ? Button(action: { self.favoritesShown = true }) {

@@ -20,12 +20,6 @@ struct RecipesContainerView: View {
     var body: some View {
         RecipesView(recipes: recipes)
             .navigationBarTitle(Text(query.capitalized), displayMode: .inline)
-            .onAppear(perform: fetch)
-    }
-
-    private func fetch() {
-        if store.state.recipes.isEmpty {
-            store.send(.search(query: query))
-        }
+            .onAppear { store.send(.search(query: query)) }
     }
 }
