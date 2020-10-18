@@ -8,6 +8,11 @@
 import Foundation
 import Combine
 
+struct Prism<Source, Target> {
+    let embed: (Target) -> Source
+    let extract: (Source) -> Target?
+}
+
 struct Reducer<State, Action, Environment> {
     let reduce: (inout State, Action, Environment) -> AnyPublisher<Action, Never>
 
@@ -21,35 +26,33 @@ struct Reducer<State, Action, Environment> {
 
     func indexed<LiftedState, LiftedAction, LiftedEnvironment, Key>(
         keyPath: WritableKeyPath<LiftedState, [Key: State]>,
-        extractAction: @escaping (LiftedAction) -> (Key, Action)?,
-        embedAction: @escaping (Key, Action) -> LiftedAction,
+        prism: Prism<LiftedAction, (Key, Action)>,
         extractEnvironment: @escaping (LiftedEnvironment) -> Environment
     ) -> Reducer<LiftedState, LiftedAction, LiftedEnvironment> {
         .init { state, action, environment in
-            guard let (index, action) = extractAction(action) else {
+            guard let (index, action) = prism.extract(action) else {
                 return Empty(completeImmediately: true).eraseToAnyPublisher()
             }
             let environment = extractEnvironment(environment)
             return self.optional()
                 .reduce(&state[keyPath: keyPath][index], action, environment)
-                .map { embedAction(index, $0) }
+                .map { prism.embed((index, $0)) }
                 .eraseToAnyPublisher()
         }
     }
 
     func indexed<LiftedState, LiftedAction, LiftedEnvironment>(
         keyPath: WritableKeyPath<LiftedState, [State]>,
-        extractAction: @escaping (LiftedAction) -> (Int, Action)?,
-        embedAction: @escaping (Int, Action) -> LiftedAction,
+        prism: Prism<LiftedAction, (Int, Action)>,
         extractEnvironment: @escaping (LiftedEnvironment) -> Environment
     ) -> Reducer<LiftedState, LiftedAction, LiftedEnvironment> {
         .init { state, action, environment in
-            guard let (index, action) = extractAction(action) else {
+            guard let (index, action) = prism.extract(action) else {
                 return Empty(completeImmediately: true).eraseToAnyPublisher()
             }
             let environment = extractEnvironment(environment)
             return self.reduce(&state[keyPath: keyPath][index], action, environment)
-                .map { embedAction(index, $0) }
+                .map { prism.embed((index, $0)) }
                 .eraseToAnyPublisher()
         }
     }
@@ -66,17 +69,16 @@ struct Reducer<State, Action, Environment> {
 
     func lift<LiftedState, LiftedAction, LiftedEnvironment>(
         keyPath: WritableKeyPath<LiftedState, State>,
-        extractAction: @escaping (LiftedAction) -> Action?,
-        embedAction: @escaping (Action) -> LiftedAction,
+        prism: Prism<LiftedAction, Action>,
         extractEnvironment: @escaping (LiftedEnvironment) -> Environment
     ) -> Reducer<LiftedState, LiftedAction, LiftedEnvironment> {
         .init { state, action, environment in
             let environment = extractEnvironment(environment)
-            guard let action = extractAction(action) else {
+            guard let action = prism.extract(action) else {
                 return Empty(completeImmediately: true).eraseToAnyPublisher()
             }
             let effect = self(&state[keyPath: keyPath], action, environment)
-            return effect.map(embedAction).eraseToAnyPublisher()
+            return effect.map(prism.embed).eraseToAnyPublisher()
         }
     }
 
