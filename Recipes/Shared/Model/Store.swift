@@ -24,34 +24,36 @@ struct Reducer<State, Action, Environment> {
         reduce(&state, action, environment)
     }
 
-    func indexed<LiftedState, LiftedAction, LiftedEnvironment, Key>(
-        keyPath: WritableKeyPath<LiftedState, [Key: State]>,
-        prism: Prism<LiftedAction, (Key, Action)>,
-        extractEnvironment: @escaping (LiftedEnvironment) -> Environment
-    ) -> Reducer<LiftedState, LiftedAction, LiftedEnvironment> {
+    func indexed<IndexedState, IndexedAction, IndexedEnvironment, Key>(
+        keyPath: WritableKeyPath<IndexedState, [Key: State]>,
+        prism: Prism<IndexedAction, (Key, Action)>,
+        extractEnvironment: @escaping (IndexedEnvironment) -> Environment
+    ) -> Reducer<IndexedState, IndexedAction, IndexedEnvironment> {
         .init { state, action, environment in
             guard let (index, action) = prism.extract(action) else {
-                return Empty(completeImmediately: true).eraseToAnyPublisher()
+                return Empty().eraseToAnyPublisher()
             }
             let environment = extractEnvironment(environment)
-            return self.optional()
+            return self
+                .optional()
                 .reduce(&state[keyPath: keyPath][index], action, environment)
                 .map { prism.embed((index, $0)) }
                 .eraseToAnyPublisher()
         }
     }
 
-    func indexed<LiftedState, LiftedAction, LiftedEnvironment>(
-        keyPath: WritableKeyPath<LiftedState, [State]>,
-        prism: Prism<LiftedAction, (Int, Action)>,
-        extractEnvironment: @escaping (LiftedEnvironment) -> Environment
-    ) -> Reducer<LiftedState, LiftedAction, LiftedEnvironment> {
+    func indexed<IndexedState, IndexedAction, IndexedEnvironment>(
+        keyPath: WritableKeyPath<IndexedState, [State]>,
+        prism: Prism<IndexedAction, (Int, Action)>,
+        extractEnvironment: @escaping (IndexedEnvironment) -> Environment
+    ) -> Reducer<IndexedState, IndexedAction, IndexedEnvironment> {
         .init { state, action, environment in
             guard let (index, action) = prism.extract(action) else {
-                return Empty(completeImmediately: true).eraseToAnyPublisher()
+                return Empty().eraseToAnyPublisher()
             }
             let environment = extractEnvironment(environment)
-            return self.reduce(&state[keyPath: keyPath][index], action, environment)
+            return self
+                .reduce(&state[keyPath: keyPath][index], action, environment)
                 .map { prism.embed((index, $0)) }
                 .eraseToAnyPublisher()
         }
@@ -95,9 +97,11 @@ import os.log
 extension Reducer {
     func signpost(log: OSLog = OSLog(subsystem: "com.aaplab.food", category: "Reducer")) -> Reducer {
         .init { state, action, environment in
-            os_signpost(.begin, log: log, name: "Action", "%s", String(reflecting: action))
+            let actionString = String(reflecting: action)
+            os_signpost(.event, log: log, name: "Action", "%{public}@", actionString)
+            os_signpost(.begin, log: log, name: "Action", "%{public}@", actionString)
             let effect = self.reduce(&state, action, environment)
-            os_signpost(.end, log: log, name: "Action", "%s", String(reflecting: action))
+            os_signpost(.end, log: log, name: "Action", "%{public}@", actionString)
             return effect
         }
     }
@@ -168,8 +172,10 @@ final class Store<State, Action>: ObservableObject {
         )
 
         $state
+            .subscribe(on: store.queue)
             .map(deriveState)
             .removeDuplicates()
+            .receive(on: DispatchQueue.main)
             .assign(to: &store.$state)
 
         return store
